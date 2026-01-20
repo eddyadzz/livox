@@ -1,0 +1,5 @@
+{
+  "name": "BizDocs AI",
+  "description": "A comprehensive business document manager for Invoices, Quotations, and more. Features multi-business support, customizable templates, and AI-powered drafting using Google Gemini.",
+  "requestFramePermissions": []
+}

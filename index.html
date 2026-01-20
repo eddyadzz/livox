@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Livox Flow</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #f1f5f9;
+    }
+
+    .dark body {
+      background-color: #020617;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.625rem 1rem;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      color: #1e293b;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    }
+
+    .dark .input-field {
+      background-color: #0f172a;
+      border-color: #334155;
+      color: #f1f5f9;
+      box-shadow: none;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+    }
+
+    .input-field:hover:not(:focus) {
+      border-color: #cbd5e1;
+    }
+
+    .dark .input-field:hover:not(:focus) {
+      border-color: #475569;
+    }
+
+    .label-text {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 0.375rem;
+      margin-left: 0.25rem;
+    }
+
+    .dark .label-text {
+      color: #94a3b8;
+    }
+
+    @keyframes slide-up {
+      from {
+        transform: translateY(10px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .animate-slide-up {
+      animation: slide-up 0.3s ease-out forwards;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #printable-area,
+      #printable-area * {
+        visibility: visible;
+      }
+
+      #printable-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: white;
+        color: black;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1",
+    "path": "https://aistudiocdn.com/path@^0.12.7",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.4",
+    "url": "https://aistudiocdn.com/url@^0.11.4",
+    "bcryptjs": "https://aistudiocdn.com/bcryptjs@^3.0.3",
+    "cors": "https://aistudiocdn.com/cors@^2.8.5",
+    "@prisma/client": "https://aistudiocdn.com/@prisma/client@^7.0.1",
+    "nodemailer": "https://aistudiocdn.com/nodemailer@^7.0.11",
+    "dotenv": "https://aistudiocdn.com/dotenv@^17.2.3",
+    "express": "https://aistudiocdn.com/express@^5.1.0",
+    "jsonwebtoken": "https://aistudiocdn.com/jsonwebtoken@^9.0.2",
+    "crypto": "https://aistudiocdn.com/crypto@^1.0.1",
+    "puppeteer": "https://aistudiocdn.com/puppeteer@^24.2.0"
+  }
+}
+</script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>
