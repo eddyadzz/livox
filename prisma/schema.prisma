@@ -1,0 +1,194 @@
+
+// Prisma Schema for BizDocs AI
+// Generator for the Prisma Client
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Datasource using PostgreSQL (standard for production document apps)
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Core Business Profile
+model Business {
+  id        String   @id
+  name      String
+  email     String
+  phone     String
+  address   String
+  // structured JSON storing branding (colors, logo URLs) and document sequences
+  settings  Json     
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  staff     StaffMember[]
+  customers Customer[]
+  vendors   Vendor[]
+  products  Product[]
+  expenses  Expense[]
+  docs      Doc[]
+  logs      ActivityLog[]
+}
+
+// User / Team Member Access Control
+model StaffMember {
+  id               String    @id
+  businessId       String
+  name             String
+  email            String    
+  password         String
+  role             String    @default("Viewer") // Admin, Editor, Viewer
+  lastLogin        DateTime?
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
+  createdAt        DateTime  @default(now())
+
+  business         Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([email, businessId])
+  @@index([businessId])
+}
+
+// CRM - Customers
+model Customer {
+  id         String   @id
+  businessId String
+  name       String
+  email      String
+  phone      String
+  address    String
+  tin        String?   // Tax Identification Number
+  
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@index([name])
+}
+
+// SRM - Vendors
+model Vendor {
+  id         String   @id
+  businessId String
+  name       String
+  email      String
+  phone      String
+  address    String
+  taxId      String?
+  
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+}
+
+// Product/Service Catalog
+model Product {
+  id          String   @id
+  businessId  String
+  name        String
+  description String
+  rate        Float
+  
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+}
+
+// Expense and Bill Tracking
+model Expense {
+  id            String   @id
+  businessId    String
+  date          String
+  dueDate       String?
+  category      String
+  description   String
+  amount        Float
+  taxAmount     Float?
+  paymentMethod String
+  vendorId      String?
+  status        String   // Paid, Unpaid
+  
+  business      Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@index([date])
+}
+
+// Primary Document Table (Invoices, Quotes, etc.)
+model Doc {
+  id            String   @id
+  businessId    String
+  type          String   // Invoice, Quotation, Delivery Note, Payment Receipt
+  number        String   // Generated sequence number (e.g. INV-1001)
+  date          String
+  dueDate       String?
+  clientName    String
+  clientEmail   String
+  clientAddress String
+  clientTin     String?
+  subtotal      Float
+  taxTotal      Float
+  total         Float
+  currency      String
+  status        String   // Draft, Sent, Paid, Overdue
+  notes         String   
+  terms         String?  
+  isPublic      Boolean  @default(true) // Controls whether the share link is active
+  relatedDocId  String?  // Reference to source document ID (e.g. Invoice for a Receipt)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  business      Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  items         LineItem[]
+  payments      PaymentRecord[]
+
+  @@index([businessId])
+  @@index([type])
+  @@index([status])
+}
+
+// Document Line Items
+model LineItem {
+  id          String @id @default(cuid())
+  docId       String
+  description String
+  quantity    Float
+  rate        Float
+  amount      Float
+  notes       String?
+
+  doc         Doc    @relation(fields: [docId], references: [id], onDelete: Cascade)
+
+  @@index([docId])
+}
+
+// Payment History Records
+model PaymentRecord {
+  id      String @id @default(cuid())
+  docId   String
+  date    String
+  amount  Float
+  method  String
+  notes   String?
+
+  doc     Doc    @relation(fields: [docId], references: [id], onDelete: Cascade)
+
+  @@index([docId])
+}
+
+// Audit Trail for Business Actions
+model ActivityLog {
+  id         String   @id @default(cuid())
+  businessId String
+  timestamp  DateTime @default(now())
+  action     String
+  details    String
+
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@index([timestamp])
+}
+
